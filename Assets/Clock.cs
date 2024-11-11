@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,22 +7,18 @@ public class Clock : MonoBehaviour
     public Transform minuteHand;
     public Transform hourHand;
 
-    void Start()
+    IEnumerator Start()
     {
-        StartCoroutine(Tick());
-    }
-
-    IEnumerator Tick()
-    {
-        DateTime time = DateTime.Now;
+        float degreesPerSecond = 360 / 60;
+        float degreesPerMinute = degreesPerSecond / 60;
+        float degreesPerHour = degreesPerMinute / 12;
         while (true)
         {
-            secondHand.localEulerAngles = new Vector3(0, 0, time.Second * 6);
-            minuteHand.localEulerAngles = new Vector3(0, 0, time.Minute * 6);
-            hourHand.localEulerAngles = new Vector3(0, 0, time.Hour * 30);
+            secondHand.Rotate(Vector3.forward, degreesPerSecond);
+            minuteHand.Rotate(Vector3.forward, degreesPerMinute);
+            hourHand.Rotate(Vector3.forward, degreesPerHour);
+            Debug.Log($"Time: {Time.time}");
             yield return new WaitForSeconds(1);
-            time = time.AddSeconds(1);
-            Debug.Log($"time = {Time.time}");
         }
     }
 }
