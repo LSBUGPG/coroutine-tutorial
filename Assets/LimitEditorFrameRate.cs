@@ -6,7 +6,7 @@ class LimitEditorFrameRate
     [RuntimeInitializeOnLoadMethod]
     static void OnRuntimeInitialized()
     {
-        //Application.targetFrameRate = 60;
+        Application.targetFrameRate = 60;
     }
 }
 #endif

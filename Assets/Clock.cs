@@ -17,7 +17,6 @@ public class Clock : MonoBehaviour
             secondHand.Rotate(Vector3.forward, degreesPerSecond);
             minuteHand.Rotate(Vector3.forward, degreesPerMinute);
             hourHand.Rotate(Vector3.forward, degreesPerHour);
-            Debug.Log($"Time: {Time.time}");
             yield return new WaitForSeconds(1);
         }
     }
