@@ -27,7 +27,7 @@ Create a new 3D Core Unity project.
 
 To create our sample scene for this demonstration we'll need to create a hierarchy of objects that are not necessarily in their default orientation or offset from their default pivot point. We'll start by creating an empty object to represent the clock and call it "Clock". Point this object towards the camera so that later rotations will be clockwise rotations.
 
-As a child of this object, add three empty children: `SecondHandPivot`, `MinuteHandPivot`, and `HourHandPivot`. Now we can add a cylinder as a fourth child, `FaceModel`, scaled to be a thin disc and rotated to face the camera. And as a child of each pivot add a cube to act as the respective hand model. Each should long, thin, and offset relative to the pivot.
+As a child of this object, add three empty children: `SecondHandPivot`, `MinuteHandPivot`, and `HourHandPivot`. Now we can add a cylinder as a fourth child, `FaceModel`, scaled to be a thin disc and rotated to face the camera. And as a child of each pivot add a cube to act as the respective hand model. Each should be long, thin, and offset relative to the pivot.
 
 If you want to copy my setup, here are the transforms of the various objects:
 
@@ -61,13 +61,13 @@ public class Clock : MonoBehaviour
 }
 ```
 
-Now switch back to Unity and drag the respective pivot into each of the variable slot in the clock script in the inspector window.
+Now switch back to Unity and drag the respective pivot into each of the variable slots in the clock script in the inspector window.
 
 ![the clock script in the inspector window with each of the hand pivot transforms attached](https://github.com/user-attachments/assets/bc0a7951-7795-4c1a-917f-a37d6552e0ff)
 
 ## What is a coroutine?
 
-We could update our clock every frame, but we only need to change the positions of the hands every second. Coroutines are functions that can execute a bit at a time. Each time we want the function to finish a step and wait we yield a return value back to Unity and the function will pause execution until its next update.
+We could update our clock every frame, but we only need to change the positions of the hands every second. Coroutines are functions that can execute a bit at a time. Each time we want the function to finish a step and wait, we yield a return value back to Unity. The function will pause execution until its next update.
 
 To create a coroutine you need to create a function that returns an `IEnumerator` value.
 
@@ -80,9 +80,9 @@ To create a coroutine you need to create a function that returns an `IEnumerator
 
 [`IEnumerator`](https://learn.microsoft.com/en-us/dotnet/api/system.collections.ienumerator?view=netstandard-2.0) is a special type of interface defined in the dot net library. When you define a function that returns this type, you must include at least one [`yield`](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/yield) statement within your function. This instruction is used to provide the next value or signal the end of an iterator function.
 
-To call a Coroutine function, we need to use the [`StartCoroutine`](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/MonoBehaviour.StartCoroutine.html) function of `MonoBehaviour`.
+To call a coroutine function, we need to use the [`StartCoroutine`](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/MonoBehaviour.StartCoroutine.html) function of `MonoBehaviour`.
 
-Once, started, the coroutine will continue to run so long as it is yielding new values. So we only need to start the coroutine once.
+Once started, the coroutine will continue to run so long as it is yielding new values. So we only need to start the coroutine once.
 
 > [!WARNING]
 > If you start a coroutine more than once, a new instance of the coroutine will start and will run in parallel with other instances of the same coroutine.
@@ -110,9 +110,9 @@ Switch back to Unity and run. You should see a single message `Tick` appear in t
 
 ## Creating an infinite loop
 
-With normal functions, creating an infinite loop is bad. If you try this in a Unity script, Unity will hang and become unresponsive and you will need to kill the process and reopen Unity to get out of it.
+With normal functions, creating an infinite loop is bad. If you try this in a Unity script, Unity will hang and become unresponsive. You will need to kill the process and reopen Unity to get out of it.
 
-![image](https://github.com/user-attachments/assets/9fb77453-6263-47f7-8ecf-3192b73aa1b7)
+![Unity.exe in the task manager once it has become unresponsive and needs to be terminated](https://github.com/user-attachments/assets/9fb77453-6263-47f7-8ecf-3192b73aa1b7)
 
 However, as long as we yield a value inside an infinite loop in our coroutine, Unity will retain control and won't lock up.
 
@@ -131,7 +131,7 @@ Here, the instruction `while` will cause the program to loop, as long as the con
 
 Switch back to Unity and run. You should see a continuous stream of `Tick` messages appear in the console.
 
-## Wait a second
+## Wait a second...
 
 Although we now have a loop processing ticks, it is happening every frame rather than every second. Depending on the frame rate, this could be hundreds or thousands of times a second. To reduce the amount of processing we need to do, we can yield a new [`YieldInstruction`](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/YieldInstruction.html) to wait for one second before continuing.
 
@@ -156,7 +156,7 @@ Switch back to Unity and run. You should now see one `Tick` message appearing in
 
 To rotate the hands we can use the [`Transform.Rotate`](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Transform.Rotate.html) function. We are going to use the version of the function that takes an axis and an angle to rotate about that axis.
 
-The axis we want to use is the `Z` axis. In Unity there is a `Vector3` vector defined as the `Z` axis, and it is called `Vector3.forward`. The angle we want to use will depend on the hand we are moving. For the second hand we will want to move $\frac{1}{60}$ of a circle for each tick. And since a circle is $360\degree$, we need to rotate $(\frac{360}{60})\degree$.
+The axis we want to use is the `Z` axis. In Unity there is a `Vector3` vector defined as the `Z` axis, and it is called `Vector3.forward`. The angle we want to use will depend on the hand we are moving. For the second hand we will want to move $\frac{1}{60}$ of a circle for each tick. And since a circle is $360\degree$, we need to rotate $\frac{360}{60}$ degrees.
 
 Rather than performing the calculation for the computer, we can write the calculation into the code. This has the benefit of documenting the calculation and should help us if we ever need to come back to it later.
 
@@ -195,7 +195,7 @@ https://github.com/user-attachments/assets/c280e06b-3ff0-4a04-a921-d0c41dc6eee8
 
 You will be waiting a long time to test the hour hand, but if you go into the Unity settings, you can change the time scale to speed up time.
 
-![image](https://github.com/user-attachments/assets/25c906b9-4310-4395-9579-acc100c790de)
+![the Time section of the Unity project settings window](https://github.com/user-attachments/assets/25c906b9-4310-4395-9579-acc100c790de)
 
 ## Tidy up
 
